@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.Androidloja" parent="android:Theme.Material.Light.NoActionBar" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Androidloja" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize seu tema aqui -->
+        <item name="colorPrimary">@color/neutral_gray</item>
+        <item name="colorPrimaryVariant">@color/gray_dark</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
 </resources>
