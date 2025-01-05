@@ -1,0 +1,50 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/gradient_header"
+        android:elevation="4dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+    <!-- Ícone do Menu -->
+    <ImageView
+        android:id="@+id/ivMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="16dp"
+        android:src="@drawable/ic_menu"
+        android:contentDescription="Menu"
+        android:tint="@android:color/white" />
+
+    <!-- Título Centralizado -->
+    <TextView
+        android:id="@+id/tvHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:text="Sneaker's Hub"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+</androidx.appcompat.widget.Toolbar>
+
+    <!-- RecyclerView para exibir as marcas -->
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/rvMarcas"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="8dp" />
+    </LinearLayout>
