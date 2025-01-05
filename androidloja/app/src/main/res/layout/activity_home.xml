@@ -1,50 +1,68 @@
-<LinearLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black">
+    android:layout_height="match_parent">
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <!-- Conteúdo Principal -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/gradient_header"
-        android:elevation="4dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/black">
 
-    <!-- Ícone do Menu -->
-    <ImageView
-        android:id="@+id/ivMenu"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/gradient_header"
+            android:elevation="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
+
+            <!-- Ícone do Menu -->
+            <ImageView
+                android:id="@+id/ivMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Menu"
+                android:tint="@android:color/white" />
+
+            <!-- Título Centralizado -->
+            <TextView
+                android:id="@+id/tvHeaderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp"
+                android:text="Sneaker's Hub"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- RecyclerView para exibir as marcas -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMarcas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <!-- Menu Lateral -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start|center_vertical"
-        android:paddingStart="4dp"
-        android:paddingEnd="16dp"
-        android:src="@drawable/ic_menu"
-        android:contentDescription="Menu"
-        android:tint="@android:color/white" />
+        android:layout_gravity="start"
+        android:background="@color/black"
+        app:menu="@menu/nav_menu"
+        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@android:color/white" />
 
-    <!-- Título Centralizado -->
-    <TextView
-        android:id="@+id/tvHeaderTitle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp"
-        android:text="Sneaker's Hub"
-        android:textColor="@android:color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-</androidx.appcompat.widget.Toolbar>
 
-    <!-- RecyclerView para exibir as marcas -->
-<androidx.recyclerview.widget.RecyclerView
-android:id="@+id/rvMarcas"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="8dp" />
-    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
