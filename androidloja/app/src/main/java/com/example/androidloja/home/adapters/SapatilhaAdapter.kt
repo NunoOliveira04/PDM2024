@@ -42,19 +42,15 @@ class SapatilhaAdapter(
                 .load(sapatilha.imagem)
                 .into(binding.ivSapatilha)
 
+            // Clique para abrir DetalhesSapatilhaActivity
             binding.root.setOnClickListener {
                 val context = binding.root.context
                 val intent = Intent(context, DetalhesSapatilhaActivity::class.java).apply {
-                    putExtra("marca", marcaNome)
-                    putExtra("modelo", sapatilha.nome)
-                    putExtra("preco", sapatilha.preco)
-                    putExtra("categoria", sapatilha.categoria)
-                    putExtra("genero", sapatilha.genero)
-                    putExtra("imagem", sapatilha.imagem)
+                    putExtra("marcaNome", marcaNome)
+                    putExtra("sapatilha", sapatilha) // Passando o objeto Parcelable completo
                 }
                 context.startActivity(intent)
             }
         }
-
     }
 }

@@ -35,7 +35,8 @@ class MarcaAdapter(private val marcas: List<Marca>) :
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            binding.rvSapatilhas.adapter = SapatilhaAdapter(marca.sapatilhas, marca.nome)
+            binding.rvSapatilhas.adapter = SapatilhaAdapter(marca.sapatilhas, marca.nome ?: "Desconhecida")
+
         }
     }
 }

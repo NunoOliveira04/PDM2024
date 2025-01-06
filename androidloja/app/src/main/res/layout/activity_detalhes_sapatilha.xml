@@ -1,10 +1,14 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <!-- Imagem da sapatilha -->
     <ImageView
@@ -42,4 +46,25 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
-</LinearLayout>
+        <!-- Título "Também poderá gostar" -->
+        <TextView
+            android:id="@+id/tvSugestoesTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="Também poderá gostar"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- RecyclerView para sapatilhas relacionadas -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSapatilhasRelacionadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+    </LinearLayout>
+</ScrollView>
