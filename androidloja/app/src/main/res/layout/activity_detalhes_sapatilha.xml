@@ -46,6 +46,37 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
+        <!-- Botão "Adicionar ao carrinho" -->
+        <Button
+            android:id="@+id/btnAdicionarCarrinho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:drawableStart="@drawable/ic_carrinho"
+            android:drawablePadding="8dp"
+            android:backgroundTint="@color/primaryColor"
+            android:singleLine="true"
+            android:ellipsize="none"
+            android:text="Adicionar ao carrinho"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp" />
+
+
+
+
+
+        <!-- Divisória -->
+        <View
+            android:id="@+id/divisoria"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="24dp"
+            android:background="@android:color/darker_gray" />
+
         <!-- Título "Também poderá gostar" -->
         <TextView
             android:id="@+id/tvSugestoesTitulo"

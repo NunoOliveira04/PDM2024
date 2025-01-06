@@ -29,6 +29,9 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
         // Preencher detalhes da sapatilha
         setupSapatilhaDetails(sapatilha, marcaNome)
 
+        // Configurar clique do botão "Adicionar ao carrinho"
+        setupAddToCartButton()
+
         // Buscar sapatilhas relacionadas
         fetchRelatedSapatilhas(sapatilha)
     }
@@ -42,6 +45,14 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
         binding.tvPreco.text = "€ ${sapatilha.preco}"
         binding.tvCategoriaGenero.text =
             "Categoria: ${sapatilha.categoria} | Gênero: ${sapatilha.genero}"
+    }
+
+    private fun setupAddToCartButton() {
+        binding.btnAdicionarCarrinho.setOnClickListener {
+            // Aqui você pode adicionar a lógica de adicionar ao carrinho
+            // Exemplo de exibição de mensagem:
+            // Toast.makeText(this, "Adicionado ao carrinho!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun fetchRelatedSapatilhas(sapatilha: Sapatilha) {
