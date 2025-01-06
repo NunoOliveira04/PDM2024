@@ -1,14 +1,17 @@
 package com.example.androidloja.home.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.androidloja.databinding.ItemSapatilhaBinding
+import com.example.androidloja.home.DetalhesSapatilhaActivity
 import com.example.androidloja.models.Sapatilha
 
 class SapatilhaAdapter(
-    private val sapatilhas: List<Sapatilha>
+    private val sapatilhas: List<Sapatilha>,
+    private val marcaNome: String
 ) : RecyclerView.Adapter<SapatilhaAdapter.SapatilhaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SapatilhaViewHolder {
@@ -38,6 +41,20 @@ class SapatilhaAdapter(
             Glide.with(binding.root.context)
                 .load(sapatilha.imagem)
                 .into(binding.ivSapatilha)
+
+            binding.root.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, DetalhesSapatilhaActivity::class.java).apply {
+                    putExtra("marca", marcaNome)
+                    putExtra("modelo", sapatilha.nome)
+                    putExtra("preco", sapatilha.preco)
+                    putExtra("categoria", sapatilha.categoria)
+                    putExtra("genero", sapatilha.genero)
+                    putExtra("imagem", sapatilha.imagem)
+                }
+                context.startActivity(intent)
+            }
         }
+
     }
 }
