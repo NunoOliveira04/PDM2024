@@ -1,101 +1,156 @@
-<ScrollView
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Conteúdo Principal -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/black">
 
-    <!-- Imagem da sapatilha -->
-    <ImageView
-        android:id="@+id/ivSapatilha"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop" />
-
-    <!-- Nome da marca e modelo -->
-    <TextView
-        android:id="@+id/tvModeloMarca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-
-    <!-- Preço -->
-    <TextView
-        android:id="@+id/tvPreco"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <!-- Categoria e género -->
-    <TextView
-        android:id="@+id/tvCategoriaGenero"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
-
-        <!-- Botão "Adicionar ao carrinho" -->
-        <Button
-            android:id="@+id/btnAdicionarCarrinho"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:drawableStart="@drawable/ic_carrinho"
-            android:drawablePadding="8dp"
-            android:backgroundTint="@color/primaryColor"
-            android:singleLine="true"
-            android:ellipsize="none"
-            android:text="Adicionar ao carrinho"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="12dp" />
-
-
-
-
-
-        <!-- Divisória -->
-        <View
-            android:id="@+id/divisoria"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="24dp"
-            android:background="@android:color/darker_gray" />
-
-        <!-- Título "Também poderá gostar" -->
-        <TextView
-            android:id="@+id/tvSugestoesTitulo"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="Também poderá gostar"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:background="@drawable/gradient_header"
+            android:elevation="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- RecyclerView para sapatilhas relacionadas -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSapatilhasRelacionadas"
+            <!-- Ícone do Menu -->
+            <ImageView
+                android:id="@+id/ivMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Menu"
+                android:tint="@android:color/white" />
+
+            <!-- Título Centralizado -->
+            <TextView
+                android:id="@+id/tvHeaderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp"
+                android:text="Sneaker's Hub"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- Conteúdo principal com Scroll -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:overScrollMode="never"
-            android:scrollbars="none" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Imagem da sapatilha -->
+                <ImageView
+                    android:id="@+id/ivSapatilha"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginBottom="16dp"
+                    android:scaleType="centerCrop" />
+
+                <!-- Nome da marca e modelo -->
+                <TextView
+                    android:id="@+id/tvModeloMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- Preço -->
+                <TextView
+                    android:id="@+id/tvPreco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <!-- Categoria e género -->
+                <TextView
+                    android:id="@+id/tvCategoriaGenero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <!-- Botão "Adicionar ao carrinho" -->
+                <Button
+                    android:id="@+id/btnAdicionarCarrinho"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@drawable/ic_carrinho"
+                    android:drawablePadding="8dp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:singleLine="true"
+                    android:ellipsize="none"
+                    android:text="Adicionar ao carrinho"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp" />
+
+                <!-- Divisória -->
+                <View
+                    android:id="@+id/divisoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@android:color/darker_gray" />
+
+                <!-- Título "Também poderá gostar" -->
+                <TextView
+                    android:id="@+id/tvSugestoesTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Também poderá gostar"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <!-- RecyclerView para sapatilhas relacionadas -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSapatilhasRelacionadas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- Menu Lateral -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/black"
+        app:menu="@menu/nav_menu"
+        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@android:color/white" />
+</androidx.drawerlayout.widget.DrawerLayout>

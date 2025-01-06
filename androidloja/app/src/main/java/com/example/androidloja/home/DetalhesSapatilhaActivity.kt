@@ -1,5 +1,6 @@
 package com.example.androidloja.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,6 +9,10 @@ import com.example.androidloja.databinding.ActivityDetalhesSapatilhaBinding
 import com.example.androidloja.home.adapters.SapatilhaAdapter
 import com.example.androidloja.models.Sapatilha
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import com.example.androidloja.MainActivity
+import com.example.androidloja.R
 
 class DetalhesSapatilhaActivity : AppCompatActivity() {
 
@@ -18,6 +23,13 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalhesSapatilhaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Configurar Toolbar
+        val toolbar: Toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+
+        // Configurar o menu lateral (Drawer)
+        configureDrawer()
 
         // Obter dados passados da sapatilha selecionada
         val sapatilha = intent.getParcelableExtra<Sapatilha>("sapatilha")!!
@@ -34,6 +46,34 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
 
         // Buscar sapatilhas relacionadas
         fetchRelatedSapatilhas(sapatilha)
+    }
+
+    private fun configureDrawer() {
+        // Configurar clique nas 3 barras para abrir o menu lateral
+        binding.ivMenu.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        // Configurar cliques no menu lateral
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    // Redirecionar para HomeActivity
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.nav_logout -> {
+                    // Redirecionar para MainActivity e finalizar a HomeActivity
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setupSapatilhaDetails(sapatilha: Sapatilha, marcaNome: String) {
