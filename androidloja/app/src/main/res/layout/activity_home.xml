@@ -64,5 +64,16 @@
         app:itemTextColor="@android:color/white"
         app:itemIconTint="@android:color/white" />
 
+    <!-- Botão Flutuante para o Carrinho -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCarrinho"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_carrinho"
+        android:contentDescription="Abrir carrinho"
+        android:backgroundTint="@color/primaryColor"
+        android:tint="@android:color/white" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

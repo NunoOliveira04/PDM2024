@@ -103,54 +103,53 @@
                     android:drawableStart="@drawable/ic_carrinho"
                     android:drawablePadding="8dp"
                     android:backgroundTint="@color/primaryColor"
-                    android:singleLine="true"
-                    android:ellipsize="none"
                     android:text="Adicionar ao carrinho"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="12dp" />
-
-                <!-- Divisória -->
-                <View
-                    android:id="@+id/divisoria"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="24dp"
-                    android:background="@android:color/darker_gray" />
-
-                <!-- Título "Também poderá gostar" -->
-                <TextView
-                    android:id="@+id/tvSugestoesTitulo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Também poderá gostar"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <!-- RecyclerView para sapatilhas relacionadas -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSapatilhasRelacionadas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:overScrollMode="never"
-                    android:scrollbars="none" />
             </LinearLayout>
         </ScrollView>
+
+        <!-- Botão Flutuante para o Carrinho -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCarrinho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_carrinho"
+            android:contentDescription="Abrir carrinho"
+            android:backgroundTint="@color/primaryColor"
+            android:tint="@android:color/white" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!-- Menu Lateral -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
+    <!-- Drawer Lateral -->
+    <LinearLayout
+        android:id="@+id/rightDrawer"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/black"
-        app:menu="@menu/nav_menu"
-        app:itemTextColor="@android:color/white"
-        app:itemIconTint="@android:color/white" />
+        android:layout_gravity="end"
+        android:orientation="vertical"
+        android:background="#000000"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvCarrinhoTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Carrinho"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- RecyclerView para os itens do carrinho -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCarrinhoDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

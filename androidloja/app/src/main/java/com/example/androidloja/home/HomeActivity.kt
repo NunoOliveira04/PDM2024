@@ -13,16 +13,33 @@ import com.example.androidloja.models.Sapatilha
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
 import com.example.androidloja.R
+import com.google.firebase.auth.FirebaseAuth
+import com.example.androidloja.autenticacao.LoginActivity
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Inicializar FirebaseAuth
+        auth = FirebaseAuth.getInstance()
+
+        // Obter o ID do utilizador autenticado
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            // Se o usuário não estiver autenticado, redireciona para o LoginActivity
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
 
         // Configurar Firestore
         firestore = FirebaseFirestore.getInstance()
@@ -52,7 +69,8 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_logout -> {
-                    // Redirecionar para MainActivity e finalizar a HomeActivity
+                    // Fazer logout e redirecionar para MainActivity
+                    auth.signOut()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -68,7 +86,6 @@ class HomeActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 val marcas = mutableListOf<Marca>()
-
                 for (document in result) {
                     val nomeMarca = document.getString("nome") ?: ""
                     val sapatilhasList = mutableListOf<Sapatilha>()
@@ -89,13 +106,14 @@ class HomeActivity : AppCompatActivity() {
                                 )
                                 sapatilhasList.add(sapatilha)
                             }
-
-                            // Adicionar marca com suas sapatilhas
+                            // Adicionar marca com suas sapatilhas após obter todos os dados
                             val marca = Marca(nome = nomeMarca, sapatilhas = sapatilhasList)
                             marcas.add(marca)
 
-                            // Atualizar RecyclerView com os dados
-                            binding.rvMarcas.adapter = MarcaAdapter(marcas)
+                            // Atualizar RecyclerView apenas uma vez no final
+                            if (marcas.size == result.size()) {
+                                binding.rvMarcas.adapter = MarcaAdapter(marcas)
+                            }
                         }
                         .addOnFailureListener { e ->
                             Log.e("Firestore", "Erro ao buscar sapatilhas: ${e.message}")

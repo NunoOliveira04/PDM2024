@@ -34,12 +34,17 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Snackbar.make(binding.root, "Login efetuado com sucesso!", Snackbar.LENGTH_LONG).show()
-                        // Redireciona para HomeActivity
-                        startActivity(Intent(this, HomeActivity::class.java))
-                        finish()
+                        // Guardar o ID do utilizador em memória
+                        val userId = auth.currentUser?.uid
+                        if (userId != null) {
+                            // Enviar o ID do utilizador para a HomeActivity
+                            val intent = Intent(this, HomeActivity::class.java).apply {
+                                putExtra("USER_ID", userId)
+                            }
+                            startActivity(intent)
+                            finish()
+                        }
                     } else {
-                        // Mensagens personalizadas baseadas no erro
                         val errorMessage = when (task.exception?.message) {
                             "The email address is badly formatted." -> "O formato do email está incorreto."
                             "There is no user record corresponding to this identifier." -> "O utilizador não foi encontrado."

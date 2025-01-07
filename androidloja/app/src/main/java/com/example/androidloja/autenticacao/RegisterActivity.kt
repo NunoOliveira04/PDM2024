@@ -20,7 +20,6 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializar Firebase Authentication e Firestore
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -38,6 +37,7 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        val userId = auth.currentUser!!.uid
                         val user = mapOf(
                             "nome" to name,
                             "telefone" to phone,
@@ -45,19 +45,21 @@ class RegisterActivity : AppCompatActivity() {
                         )
 
                         firestore.collection("Usuarios")
-                            .document(auth.currentUser!!.uid)
+                            .document(userId)
                             .set(user)
                             .addOnSuccessListener {
                                 Snackbar.make(binding.root, "Registo efetuado com sucesso!", Snackbar.LENGTH_LONG).show()
-                                // Redireciona para HomeActivity
-                                startActivity(Intent(this, HomeActivity::class.java))
+                                // Enviar o ID do utilizador para a HomeActivity
+                                val intent = Intent(this, HomeActivity::class.java).apply {
+                                    putExtra("USER_ID", userId)
+                                }
+                                startActivity(intent)
                                 finish()
                             }
                             .addOnFailureListener {
                                 Snackbar.make(binding.root, "Erro ao salvar os dados do utilizador.", Snackbar.LENGTH_LONG).show()
                             }
                     } else {
-                        // Mensagens personalizadas baseadas no erro
                         val errorMessage = when (task.exception?.message) {
                             "The email address is badly formatted." -> "O formato do email está incorreto."
                             "The email address is already in use by another account." -> "O email já está em uso."
