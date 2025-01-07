@@ -14,10 +14,14 @@ import com.example.androidloja.home.adapters.CarrinhoAdapter
 import com.example.androidloja.home.adapters.SapatilhaAdapter
 import com.example.androidloja.models.CarrinhoItem
 import com.example.androidloja.models.Sapatilha
+import com.example.androidloja.models.ContadorCarrinho
 import com.example.androidloja.models.TamanhosSapatilhas
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.EditText
+import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
 
 class DetalhesSapatilhaActivity : AppCompatActivity() {
 
@@ -38,6 +42,9 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
         binding.rvCarrinho.layoutManager = LinearLayoutManager(this)
         carrinhoAdapter = CarrinhoAdapter(carrinhoItems) { item -> removeFromCart(item) }
         binding.rvCarrinho.adapter = carrinhoAdapter
+
+        // Configurar menu do carrinho
+        binding.btnCarrinhoMenu.setOnClickListener { showCarrinhoOptions() }
 
         // Configurar menu
         binding.ivMenuDetalhes.setOnClickListener {
@@ -113,43 +120,27 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
 
             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
 
-            // Verificar se já existe este item no carrinho
-            firestore.collection("carrinho")
-                .whereEqualTo("userId", userId)
-                .whereEqualTo("sapatilhaId", sapatilha.nome)
-                .whereEqualTo("tamanho", tamanhoSelecionado)
-                .get()
-                .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        // Se não existe, criar novo item
-                        val carrinhoItem = mapOf(
-                            "userId" to userId,
-                            "sapatilhaId" to sapatilha.nome,
-                            "marca" to sapatilha.marca,
-                            "modelo" to sapatilha.nome,
-                            "imagemUrl" to sapatilha.imagem,
-                            "quantidade" to 1,
-                            "tamanho" to tamanhoSelecionado,
-                            "preco" to sapatilha.preco
-                        )
+            // Obter o ID do carrinho do usuário atual
+            getOrCreateCarrinhoId(userId) { carrinhoId ->
+                val carrinhoItem = mapOf(
+                    "userId" to userId,
+                    "carrinhoId" to carrinhoId,
+                    "sapatilhaId" to sapatilha.nome,
+                    "marca" to sapatilha.marca,
+                    "modelo" to sapatilha.nome,
+                    "imagemUrl" to sapatilha.imagem,
+                    "quantidade" to 1,
+                    "tamanho" to tamanhoSelecionado,
+                    "preco" to sapatilha.preco
+                )
 
-                        firestore.collection("carrinho")
-                            .add(carrinhoItem)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show()
-                                fetchCarrinhoItems()
-                            }
-                    } else {
-                        // Se existe, aumentar a quantidade
-                        val document = documents.documents[0]
-                        val currentQuantity = document.getLong("quantidade")?.toInt() ?: 1
-                        document.reference.update("quantidade", currentQuantity + 1)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Quantidade aumentada", Toast.LENGTH_SHORT).show()
-                                fetchCarrinhoItems()
-                            }
+                firestore.collection("carrinho")
+                    .add(carrinhoItem)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Produto adicionado ao carrinho #$carrinhoId", Toast.LENGTH_SHORT).show()
+                        fetchCarrinhoItems()
                     }
-                }
+            }
         }
     }
 
@@ -287,5 +278,171 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this, "Erro ao remover item", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showCarrinhoOptions() {
+        val popup = PopupMenu(this, binding.btnCarrinhoMenu)
+        popup.menu.apply {
+            add(0, 1, 0, "Limpar Carrinho")
+            add(0, 2, 1, "Exportar Carrinho")
+            add(0, 3, 2, "Importar Carrinho")
+        }
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> limparCarrinho()
+                2 -> exportarCarrinho()
+                3 -> showImportCarrinhoDialog()
+            }
+            true
+        }
+
+        popup.show()
+    }
+
+    private fun limparCarrinho() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        firestore.collection("carrinho")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val batch = firestore.batch()
+                documents.forEach { doc ->
+                    batch.delete(doc.reference)
+                }
+                batch.commit().addOnSuccessListener {
+                    Toast.makeText(this, "Carrinho limpo com sucesso", Toast.LENGTH_SHORT).show()
+                    fetchCarrinhoItems()
+                }
+            }
+    }
+
+    private fun exportarCarrinho() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        firestore.collection("carrinho")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(this, "Carrinho vazio", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+                val carrinhoId = documents.documents[0].getLong("carrinhoId")
+                showCarrinhoIdDialog(carrinhoId.toString())
+            }
+    }
+
+    private fun showCarrinhoIdDialog(carrinhoId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("ID do Carrinho")
+            .setMessage("O ID do seu carrinho é: $carrinhoId")
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun showImportCarrinhoDialog() {
+        val input = EditText(this)
+        input.hint = "Digite o ID do carrinho"
+
+        AlertDialog.Builder(this)
+            .setTitle("Importar Carrinho")
+            .setView(input)
+            .setPositiveButton("Importar") { _, _ ->
+                val carrinhoId = input.text.toString()
+                if (carrinhoId.isNotEmpty()) {
+                    importarCarrinho(carrinhoId)
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun importarCarrinho(carrinhoIdStr: String) {
+        val carrinhoIdImportar = carrinhoIdStr.toLongOrNull()
+        if (carrinhoIdImportar == null) {
+            Toast.makeText(this, "ID de carrinho inválido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        // Obter o ID do carrinho do usuário atual
+        getOrCreateCarrinhoId(userId) { carrinhoIdAtual ->
+            // Buscar itens do carrinho a ser importado
+            firestore.collection("carrinho")
+                .whereEqualTo("carrinhoId", carrinhoIdImportar)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Toast.makeText(this, "Carrinho não encontrado", Toast.LENGTH_SHORT).show()
+                        return@addOnSuccessListener
+                    }
+
+                    // Copiar itens para o carrinho do usuário atual
+                    val batch = firestore.batch()
+
+                    documents.forEach { doc ->
+                        val newDocRef = firestore.collection("carrinho").document()
+                        val data = doc.data.toMutableMap().apply {
+                            // Manter o ID do carrinho atual e trocar o userId
+                            this["carrinhoId"] = carrinhoIdAtual
+                            this["userId"] = userId
+                        }
+                        batch.set(newDocRef, data)
+                    }
+
+                    batch.commit().addOnSuccessListener {
+                        Toast.makeText(this, "Itens importados para seu carrinho", Toast.LENGTH_SHORT).show()
+                        fetchCarrinhoItems()
+                    }
+                }
+        }
+    }
+
+    private fun getNextCarrinhoId(callback: (Long) -> Unit) {
+        val contadorRef = firestore.collection("carrinhos_contador").document("contador")
+
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(contadorRef)
+            val currentId = snapshot.getLong("ultimoId") ?: 0
+            val nextId = currentId + 1
+
+            transaction.set(contadorRef, mapOf("ultimoId" to nextId))
+            nextId
+        }.addOnSuccessListener { novoId ->
+            callback(novoId)
+        }
+    }
+
+    private fun getOrCreateCarrinhoId(userId: String, callback: (Long) -> Unit) {
+        val carrinhoRef = firestore.collection("usuarios_carrinho").document(userId)
+
+        carrinhoRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // Se o usuário já tem um ID de carrinho, usar o existente
+                val carrinhoId = document.getLong("carrinhoId") ?: 0
+                callback(carrinhoId)
+            } else {
+                // Se não tem, criar um novo ID
+                val contadorRef = firestore.collection("carrinhos_contador").document("contador")
+
+                firestore.runTransaction { transaction ->
+                    val snapshot = transaction.get(contadorRef)
+                    val currentId = snapshot.getLong("ultimoId") ?: 0
+                    val nextId = currentId + 1
+
+                    // Atualiza o contador
+                    transaction.set(contadorRef, mapOf("ultimoId" to nextId))
+                    // Associa o novo ID ao usuário
+                    transaction.set(carrinhoRef, mapOf("carrinhoId" to nextId))
+
+                    nextId
+                }.addOnSuccessListener { novoId ->
+                    callback(novoId)
+                }
+            }
+        }
     }
 }
