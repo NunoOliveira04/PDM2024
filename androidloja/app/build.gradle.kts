@@ -93,5 +93,6 @@ dependencies {
 
     implementation ("com.google.android.material:material:1.9.0")
 
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
 
 }

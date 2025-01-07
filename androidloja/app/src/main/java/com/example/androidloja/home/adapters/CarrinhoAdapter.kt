@@ -8,7 +8,8 @@ import com.example.androidloja.databinding.ItemCarrinhoBinding
 import com.example.androidloja.models.CarrinhoItem
 
 class CarrinhoAdapter(
-    private val itens: List<CarrinhoItem>
+    private val itens: List<CarrinhoItem>,
+    private val onRemoveClick: (CarrinhoItem) -> Unit
 ) : RecyclerView.Adapter<CarrinhoAdapter.CarrinhoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarrinhoViewHolder {
@@ -32,14 +33,25 @@ class CarrinhoAdapter(
         fun bind(item: CarrinhoItem) {
             // Exibir imagem do produto
             Glide.with(binding.root.context)
-                .load(item.imagemUrl) // URL da imagem
+                .load(item.imagemUrl)
                 .into(binding.ivProduto)
 
-            // Exibir marca e modelo na mesma linha
+            // Exibir marca e modelo
             binding.tvNomeProduto.text = "${item.marca} ${item.modelo}"
+
+            // Exibir tamanho
+            binding.tvTamanho.text = "Tamanho: ${item.tamanho ?: "Não especificado"}"
 
             // Exibir quantidade
             binding.tvQuantidade.text = "Quantidade: ${item.quantidade}"
+
+            // Exibir preço
+            binding.tvPrecoItem.text = String.format("€ %.2f", item.preco * item.quantidade)
+
+            // Configurar botão de remover
+            binding.btnRemover.setOnClickListener {
+                onRemoveClick(item)
+            }
         }
     }
 }
