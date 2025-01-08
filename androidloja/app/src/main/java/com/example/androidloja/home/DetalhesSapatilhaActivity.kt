@@ -23,6 +23,7 @@ import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 
+
 class DetalhesSapatilhaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetalhesSapatilhaBinding
@@ -30,6 +31,8 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
     private lateinit var carrinhoAdapter: CarrinhoAdapter
     private val carrinhoItems = mutableListOf<CarrinhoItem>()
     private var tamanhoSelecionado: Int? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,16 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        // Adicionar listener para o botão de checkout
+        binding.btnCheckout.setOnClickListener {
+            if (carrinhoItems.isEmpty()) {
+                Toast.makeText(this, "O carrinho está vazio", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            iniciarCheckout()
+        }
+
 
         // Botão do carrinho
         binding.fabCarrinhoDetalhes.setOnClickListener { openCartDrawer() }
@@ -241,6 +254,8 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
         fetchCarrinhoItems()
         binding.drawerLayout.openDrawer(binding.carrinhoDrawer)
     }
+
+
 
     private fun removeFromCart(item: CarrinhoItem) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -444,5 +459,27 @@ class DetalhesSapatilhaActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun iniciarCheckout() {
+        val total = carrinhoItems.sumOf { it.preco * it.quantidade }
+        val intent = Intent(this, CheckoutActivity::class.java).apply {
+            putParcelableArrayListExtra("itens_carrinho", ArrayList(carrinhoItems))
+            putExtra("total_compra", total)
+        }
+        startActivityForResult(intent, CHECKOUT_REQUEST_CODE)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHECKOUT_REQUEST_CODE && resultCode == RESULT_OK) {
+            binding.drawerLayout.closeDrawer(binding.carrinhoDrawer)
+            fetchCarrinhoItems()
+        }
+    }
+
+    companion object {
+        private const val CHECKOUT_REQUEST_CODE = 100
     }
 }

@@ -42,7 +42,9 @@
 
         <activity android:name=".home.DetalhesSapatilhaActivity" />
 
-
+        <activity
+            android:name=".home.CheckoutActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
